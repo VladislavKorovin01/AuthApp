@@ -1,62 +1,57 @@
 <?php
     require_once 'helpers.php';
 
-    setValue("name", $_POST["name"] ?? null);
-    setValue("email", $_POST["email"] ?? null);
-    setValue("phone", $_POST["phone"] ?? null);
-    setValue("password", $_POST["password"] ?? null);
-    setValue("passwordConfirm",$_POST["passwordConfirm"] ?? null);
+    $name = $_POST["name"] ?? null;
+    $email = $_POST["email"] ?? null;
+    $phone = $_POST["phone"] ?? null;
+    $password = $_POST["password"] ?? null;
+    $passwordConfirm = $_POST["passwordConfirm"] ?? null;
     
     if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-        if(empty($_POST["name"])){
-            setError("name","field is required");
+        if(empty($name)){
+            setError("name","обязательное поле");
         } 
-        if(empty($_POST["phone"])){
-            setError("phone","field is required");
-        } 
-        else{
-            if(!filter_var($_POST["phone"], FILTER_VALIDATE_INT)){
-                setError("phone","phone not valid");
-            }
+        if(empty($phone) || !filter_var($phone, FILTER_VALIDATE_INT)){
+            setError("phone","обязательное поле");
         }
-        if(empty($_POST["email"])){
-            setError("email","field is required");
-        }
-        else{
-            if(!filter_var($_POST["email"],FILTER_VALIDATE_EMAIL)){
-                setError("email","email not valid");
-            }
+        if(empty($email) || !filter_var($email,FILTER_VALIDATE_EMAIL)){
+            setError("email","почта не валидна");
         }
 
-        if(empty($_POST["password"])){
-           setError("password","password is required");
+        if(empty($password)){
+           setError("password","обязательное поле");
         }
         else{
-            if($_POST["password"] !== $_POST["passwordConfirm"]){
+            if($password !== $passwordConfirm){
                 setError("password","Пароли должны совпадать");
             }
         }
 
-        if(!isset($_SESSION["errors"])){
-            
-            $conn = GetConnection();
-
-            $stmt = $conn -> prepare("SELECT * FROM Users WHERE Email=? OR Phone=?");
-            $stmt -> bind_param("ss", GetValue("email"), getvalue("phone"));
-            $stmt -> execute();
-            $res = $stmt -> get_result() -> fetch_assoc();
-
-            if($res!= null){
-                $_SESSION["info"]="такой пользователь уже существует";
-             }
-            else{
-                $stmt = $conn -> prepare("INSERT INTO Users(Name, Phone, Email,Password) VALUES(?,?,?,?)");
-                $stmt -> bind_param("ssss", GetValue("name"), getvalue("phone"),GetValue("email"), password_hash(GetValue("password"),PASSWORD_DEFAULT));
+        if(empty($_SESSION["errors"])){
+            try{
+                $conn = GetConnection();
+                $stmt = $conn -> prepare("SELECT * FROM Users WHERE Email=? OR Phone=?");
+                $stmt -> bind_param("ss", $email, $phone);
                 $stmt -> execute();
-                header("Localtion: /index.php");
-                die;
+                $res = $stmt -> get_result() -> fetch_assoc();
+    
+                if($res!= null){
+                    $_SESSION["info"]="такой пользователь уже существует";
+                 }
+                else{
+                    $stmt = $conn -> prepare("INSERT INTO Users(Name, Phone, Email,Password) VALUES(?,?,?,?)");
+                    $hash =  password_hash($password, PASSWORD_DEFAULT);
+                    $stmt -> bind_param("ssss", $name, $phone, $email, $hash);
+                    $stmt -> execute();
+                    header("Localtion: /index.php");
+                    die;
+                }
             }
+            catch(Throwable $e){
+                $_SESSION["info"] = "произлошла ошибка, попробуйте войти позже";
+            }
+
         }
     }
 

@@ -1,10 +1,11 @@
 <?php
     require_once 'layout.php';
-
-    echo GetMessage();
 ?>
 <div class='border border-primary rounded-3 col-lg-3 col-md-5 col-sm-6 col-6 p-3 ms-3 container'>
     <form class='form' method='POST' action='\actions\registration.php'>
+    <div class='form-group mb-3'>
+            <div class="text text-danger ps-3 pe-3 pu-1 pb-1"><?php echo GetMessage() ?></div>
+    </div>
     <div class='from-group mb-3'>
         <label class='form-label'>Name</label>
         <input class='form-control' type='text' name='name' value='<?php echo GetValue("name")?>'/>

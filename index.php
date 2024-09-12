@@ -1,14 +1,15 @@
 <?php
    require_once 'layout.php';
 
-    if(isset($_SESSION["profile"]) || !empty($_SESSION["profile"] )){
+    if(isAuth(isset($_SESSION["user"]["id"]))){
         header("Location: /profile.php");
     }
-
 ?>
-<?php echo GetMessage();?>
 <div class='border border-primary rounded-3 col-4 p-3 m-auto container-fluid'>
     <form class='form' method='POST' action='\actions\login.php'>
+        <div class='form-group mb-3'>
+            <div class="text text-danger ps-3 pe-3 pu-1 pb-1"><?php echo GetMessage() ?></div>
+        </div>
         <div class='from-group mb-3'>
             <label class='form-label'>Login</label>
             <input class='form-control' type='text' placeholder="Email or phone number" name='login' value='<?php echo GetValue("login")?>'/>

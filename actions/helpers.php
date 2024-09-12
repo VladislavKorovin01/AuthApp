@@ -2,16 +2,19 @@
 
 session_start();
 
-// $_SESSION["errors"]=[];
-// $_SESSION["values"]=[];
-
 require_once __DIR__ . '\..\config.php';
 
 function setError(string $key, string $value){
+    if(!isset($_SESSION["errors"])){
+        $_SESSION["errors"]=[];
+    }
     $_SESSION["errors"][$key]=$value;
 }
 
 function setValue(string $key, string $value){
+    if(!isset($_SESSION["values"])){
+        $_SESSION["values"]=[];
+    }
     $_SESSION["values"][$key]=$value;
 }
 
@@ -25,9 +28,8 @@ function GetError(string $key) : string{
     unset($_SESSION["errors"][$key]);
     return $error;
 }
-function GetValue(string $key) :string{
+function GetValue(string $key) : string{
     $value = isExist("values",$key) ? $_SESSION["values"][$key] : "";
-    unset($_SESSION["values"]["key"]);
     return $value;
 }
 
@@ -42,13 +44,6 @@ function GetMessage() : string{
     return $message;
 }
 
-function SetDataProfile(string $id, string $name, string $phone, string $email){
-    $_SESSION["profile"]["id"] = $id;   
-    $_SESSION["profile"]["name"] = $name;  
-    $_SESSION["profile"]["phone"] = $phone;  
-    $_SESSION["profile"]["email"] = $email;   
-}
-
 function GetProfileValue($key) : string{
     $value = isset($_SESSION["profile"]) ? $_SESSION["profile"][$key] : "";
     return $value;
@@ -57,9 +52,20 @@ function GetProfileValue($key) : string{
 function Logout(){
     unset($_SESSION["errors"]);
     unset($_SESSION["values"]);
-    unset($_SESSION["profile"]);
+    unset($_SESSION["user"]);
 
     header("Location: /index.php");
+}
+
+function isAuth(string $id) : array|bool{
+    $conn = GetConnection();
+    $stmt = $conn -> prepare("SELECT Id ,Name, Phone, Email, Password FROM Users WHERE Id=?");
+    $stmt->bind_param ("s", $id);
+    $user = $stmt -> execute();
+    if($user != null){
+        return $user;
+    }
+    return false;
 }
 
 
