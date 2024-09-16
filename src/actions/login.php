@@ -1,9 +1,12 @@
 <?php
 
-require_once 'helpers.php';
+require_once __DIR__ . '/../helpers.php';
 
 $login = $_POST["login"] ?? null; 
 $password = $_POST["password"] ?? null; 
+
+setValue("login", $login);
+setValue("password",$password);
 
     if(empty($login)){
         setError("login","Обязательное поле");
@@ -32,17 +35,14 @@ $password = $_POST["password"] ?? null;
                 if($user != null){
                     if(password_verify($password,$user["Password"])){
                         $_SESSION["user"]["id"] = $user["Id"];
-                        header("Location: /profile.php");
-                        die;
+                        redirect("/src/pages/profile.php");
                     }
                     $_SESSION["info"] = "неверный логин или пароль";
-                    header("Location: /index.php");
-                    die;
+                    redirect("/src/pages/login.php");
                 }
                 else{
                     $_SESSION["info"]="пользователь не найден";
-                    header("Location: /index.php");
-                    die;
+                    redirect("/index.php");
                 }
             }
             catch(Throwable $e){
@@ -51,5 +51,5 @@ $password = $_POST["password"] ?? null;
         }
     }
 
-    header("Location: /index.php");
+    redirect("/src/pages/login.php");
 ?>
