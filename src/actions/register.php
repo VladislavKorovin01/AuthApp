@@ -53,13 +53,17 @@
                 $hash =  password_hash($password, PASSWORD_DEFAULT);
                 $stmt -> bind_param("ssss", $name, $phone, $email, $hash);
                 $stmt -> execute();
-                redirect("/index.php");
+                $_SESSION["errors"] = [];
+                $_SESSION["values"] = [];
+                $_SESSION["info"] = "Регистрация прошла успешно!";
+                redirect("/src/pages/login.php");
             }
             catch(Throwable $e){
                 $_SESSION["info"] = "произлошла ошибка, попробуйте войти позже";
+                redirect("/src/pages/register.php");
             }
 
         }
     }
-    redirect("/pages/register.php");
+    redirect("/src/pages/register.php");
 ?>

@@ -12,7 +12,7 @@
 </head>
 <body>
     <div class='min-vh-100 d-flex justify-content-center align-items-center'>
-        <form class='form border border-2 border-primary rounded-3 p-3 bg-light' method='POST' action='/actions/register.php'>
+        <form class='form border border-2 border-primary rounded-3 p-3 bg-light' method='POST' action='/src/actions/register.php'>
         <div class='form-group mb-3'>
                 <div class="text text-danger ps-3 pe-3 pu-1 pb-1"><?php echo GetMessage() ?></div>
         </div>
@@ -47,7 +47,7 @@
         </div>
         <div class='form-group mb-3 d-flex justify-content-between align-items-center'>
                 <div>
-                    <input class='btn btn-primary' type='submit' value='Send'/>
+                    <input class='btn btn-primary' type='submit' value='Зарегистрироваться'/>
                 </div>
                 <div>
                     <a class="nav-link active" href='/pages/login.php'>Войти</a>

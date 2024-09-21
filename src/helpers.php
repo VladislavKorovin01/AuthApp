@@ -12,7 +12,6 @@ function setValue(string $key, string $value){
     $_SESSION["values"][$key]=$value;
 }
 
-
 function isExist(string $arrays, string $key) : bool{
     return isset($_SESSION[$arrays][$key]);
 }

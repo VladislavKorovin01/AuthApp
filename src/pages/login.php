@@ -49,7 +49,10 @@
                 </div>
             </div>
         </div>
-
+        <?php
+            $_SESSION["errors"] = [];
+            $_SESSION["values"] = [];
+        ?>
     <script>
         const passCheckBox = document.querySelector("#checkVisiblePass");
         const inputPass = document.querySelector("#pass");
